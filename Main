@@ -1,0 +1,123 @@
+#include <iostream>
+#include <queue>
+#include <stack>
+#include <time.h>
+#include <random>
+
+using namespace std;
+///Node class
+class Node {
+private:
+	char color;
+	int num;
+public:
+	Node() :color(' '), num(0) {}
+	Node(char c, int n) :color(c), num(n) {}
+	char getColor() { return color; }
+	int getNum() { return num; }
+};
+///Factory Class
+class NFactory {
+private:
+	queue<Node> q;
+	stack<Node> s0;
+	stack<Node> s1;
+	stack<Node> s2;
+public:
+	NFactory() {
+		srand(time(NULL));
+		for (int i = 0; i < 5; i++) {
+			char c = rand() % 4 == 0 ? 'R' : rand() % 4 == 1 ? 'W' : rand() % 4 == 2 ? 'B' : 'G';
+			int n = rand() % 10;
+			q.push(Node(c, n));
+		}
+	}
+	/// Run function
+	void run() {
+	    ///Displays Time and NFact queue
+		for (int i = 0; i < 10; i++) {
+			cout << "Time " << i << endl;
+			cout << "NFact queue: <";
+			queue<Node> q2 = q;
+			while (!q2.empty()) {
+				Node n = q2.front();
+				q2.pop();
+				cout << n.getColor() << n.getNum() << (q2.empty() ? "" : ", ");
+			}
+			///Displays Stack 0
+			cout << ">" << endl;
+			cout << "Stack 0: <";
+			stack<Node> s02 = s0;
+			while (!s02.empty()) {
+				Node n = s02.top();
+				s02.pop();
+				cout << n.getColor() << n.getNum() << (s02.empty() ? "" : ", ");
+			}
+			///Displays stack 1
+			cout << ">" << endl;
+			cout << "Stack 1: <";
+			stack<Node> s12 = s1;
+			while (!s12.empty()) {
+				Node n = s12.top();
+				s12.pop();
+				cout << n.getColor() << n.getNum() << (s12.empty() ? "" : ", ");
+			}
+			///Displays stack 2
+			cout << ">" << endl;
+			cout << "Stack 2: <";
+			stack<Node> s22 = s2;
+			while (!s22.empty()) {
+				Node n = s22.top();
+				s22.pop();
+				cout << n.getColor() << n.getNum() << (s22.empty() ? "" : ", ");
+			}
+			/// Gets the necessary info on which and where the stack info is displayed
+			cout << ">" << endl;
+			if (i % 2 == 0) {
+				while (!q.empty() && (q.front().getColor() == 'R' || q.front().getColor() == 'W')) {
+					Node n = q.front();
+					q.pop();
+					if (n.getColor() == 'R') {
+						s0.push(n);
+						cout << "Move " << n.getColor() << n.getNum() << " to Stack 0" << endl;
+					}
+					else if (n.getColor() == 'W') {
+						s1.push(n);
+						cout << "Move " << n.getColor() << n.getNum() << " to Stack 1" << endl;
+					}
+				}
+				if (!q.empty() && q.front().getColor() == 'G') {
+					Node n = q.front();
+					q.pop();
+					cout << "Pop and discard " << n.getColor() << n.getNum() << endl;
+				}
+			}
+			/// Displays which stack certain information should be moved to
+			else {
+				while (!q.empty() && (q.front().getColor() == 'B' || q.front().getColor() == 'W')) {
+					Node n = q.front();
+					q.pop();
+					if (n.getColor() == 'B') {
+						s2.push(n);
+						cout << "Move " << n.getColor() << n.getNum() << " to Stack 2" << endl;
+					}
+					else if (n.getColor() == 'W') {
+						s1.push(n);
+						cout << "Move " << n.getColor() << n.getNum() << " to Stack 1" << endl;
+					}
+				}
+				if (!q.empty() && q.front().getColor() == 'G') {
+					Node n = q.front();
+					q.pop();
+					cout << "Pop and discard " << n.getColor() << n.getNum() << endl;
+				}
+			}
+		}
+	}
+};
+///Main function that calls the previous functions
+int main() {
+	NFactory nf;
+	nf.run();
+	return 0;
+}
